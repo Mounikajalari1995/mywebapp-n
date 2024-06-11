@@ -1,8 +1,16 @@
 import os
 import psycopg2
+import requests
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
+
+# Configuration for backend service name and namespace
+FRONTEND_SERVICE_NAME = os.environ.get("FRONTEND_SERVICE_NAME", "frontend-service")
+FRONTEND_NAMESPACE = os.environ.get("FRONTEND_NAMESPACE", "frontend")
+
+# Frontend URL configuration
+app.config["FRONTEND_URL"] = f"http://{FRONTEND_SERVICE_NAME}.{FRONTEND_NAMESPACE}.svc.cluster.local"
 
 # Use environment variables to configure the database connection
 DATABASE_URL = (
@@ -30,7 +38,10 @@ cur.execute(create_table_sql)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Fetch index.html from the frontend service
+    frontend_url = app.config["FRONTEND_URL"]
+    response = requests.get(f"{frontend_url}/index.html")
+    return response.text
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -39,6 +50,8 @@ def submit():
     cur.execute("INSERT INTO test.users (username, email) VALUES (%s, %s)", (username, email))
     conn.commit()
     return "Submitted!"
+
+# Define other routes and functions as needed
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

@@ -2,7 +2,10 @@
 FROM nginx:alpine
 
 # Copy HTML files to the nginx html directory
-COPY index.html /usr/share/nginx/html
+COPY templates/index.html /usr/share/nginx/html/index.html
+
+# Create an empty favicon.ico file (optional)
+RUN touch /usr/share/nginx/html/favicon.ico
 
 # Expose port
 EXPOSE 80
