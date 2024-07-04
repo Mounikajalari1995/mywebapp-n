@@ -1,0 +1,28 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud secrets versions access latest --secret=my-service-account-key > /root/service-account-key.json
+        gcloud auth activate-service-account --key-file=/root/service-account-key.json
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend-ui:$SHORT_SHA', './Frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/backend-app:$SHORT_SHA', './Backend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/frontend-ui:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/backend-app:$SHORT_SHA']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './Frontend/deployment.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=your-zone', 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './Backend/deployment.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=your-zone', 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './Frontend/frontend-service.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=your-zone', 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster']
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './Backend/backend-service.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=your-zone', 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster']
