@@ -1,3 +1,7 @@
+options:
+  logsBucket: gs://mnkcloud
+
+
 steps:
   # Fetch the latest version of the secret and store it securely in Cloud Build environment
   - name: 'gcr.io/cloud-builders/gcloud'
