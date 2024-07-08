@@ -1,7 +1,6 @@
 options:
   logging: CLOUD_LOGGING_ONLY  # Specify how logging should be handled
-  logStreamingOption: STREAM 
-  logsBucket: gs://mnkcloud
+  # logsBucket: gs://mnkcloud
     # Specify how logging should be handled
 
 steps:
