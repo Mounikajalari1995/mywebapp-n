@@ -10,7 +10,12 @@ steps:
     args:
       - '-c'
       - |
+        gcloud secrets versions access latest --secret=my-secret --project=mounika8036-426015 > /tmp/service-account-key.json
+        
         ls -l /tmp  # List files in /tmp directory to verify service-account-key.json existence
+        cat /tmp/service-account-key.json  # Output the contents for verification (optional)
+
+        # Activate service account using the key file
         gcloud auth activate-service-account --key-file=/tmp/service-account-key.json
 
   # Build and push Docker images for frontend and backend applications
