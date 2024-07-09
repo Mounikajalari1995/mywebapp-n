@@ -10,7 +10,7 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --secret=my-secret --project=mounika8036-426015 > /tmp/service-account-key.json
+        gcloud secrets versions access latest --secret=my-service-account-key --project=mounika8036-426015 > /tmp/service-account-key.json
         
         ls -l /tmp  # List files in /tmp directory to verify service-account-key.json existence
         cat /tmp/service-account-key.json  # Output the contents for verification (optional)
