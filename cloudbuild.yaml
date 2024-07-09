@@ -10,8 +10,8 @@ steps:
     args:
       - '-c'
       - |
-        gcloud secrets versions access latest --secret=my-service-account-key > /tmp/service-account-key.json
-
+        # gcloud secrets versions access latest --secret=my-service-account-key > /tmp/service-account-key.json
+        gcloud auth activate-service-account --key-file=/tmp/service-account-key.json
   # Authenticate using the fetched service account key
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
