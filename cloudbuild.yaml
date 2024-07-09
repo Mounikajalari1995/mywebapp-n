@@ -1,7 +1,7 @@
 options:
   logging: CLOUD_LOGGING_ONLY  # Specify how logging should be handled
   # logsBucket: gs://mnkcloud
-    # Specify how logging should be handled
+    # Specifyv how logging should be handled
 
 steps:
   # Fetch the latest version of the secret and store it securely in Cloud Build environment
