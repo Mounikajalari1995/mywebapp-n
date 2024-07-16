@@ -1,7 +1,5 @@
 options:
   logging: CLOUD_LOGGING_ONLY  # Specify how logging should be handled
-  # logsBucket: gs://mnkcloud
-    # Specifyv how logging should be handled
 
 steps:
   # Fetch the latest version of the secret and store it securely in Cloud Build environment
@@ -30,6 +28,15 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/backend-app:$SHORT_SHA']
+
+  # Apply the namespace configurations
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './frontend/namespace.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1-a', 'CLOUDSDK_CONTAINER_CLUSTER=mycluster']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', './backend/namespace.yaml']
+    env: ['CLOUDSDK_COMPUTE_ZONE=us-central1-a', 'CLOUDSDK_CONTAINER_CLUSTER=mycluster']
 
   # Apply Kubernetes deployment files
   - name: 'gcr.io/cloud-builders/kubectl'
